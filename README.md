@@ -17,3 +17,6 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Alasan Memilih Vue JS
+Dikarenakan ada batasan waktu untuk pengerjaan, saya lebih memilih Vue JS yang mana lebih familiar Vue JS dibandingkan reactJS
