@@ -1,13 +1,19 @@
 <template>
   <div  
     id="footer-app"
-    class="p-2 pb-0 bg-black text-white"
+    class="bg-black text-white"
   >   
-    <div>
-    </div> 
     <div class="d-flex justify-content-between">
-      <div>
-
+      <div class="d-flex">
+        <div>
+          <facebook-icon size="1.5x"/>
+        </div>
+        <div class="mx-4">
+          <instagram-icon size="1.5x"/>
+        </div>
+        <div>
+          <twitter-icon size="1.5x"/>
+        </div>
       </div>
       <small>
         Terms & Condition
@@ -19,7 +25,20 @@
 </template>
 
 <script>
+import { FacebookIcon, InstagramIcon, TwitterIcon } from 'vue-feather-icons'
+
 export default {  
-  name: 'footer-web-app'
+  name: 'footer-web-app',
+  components: {
+    FacebookIcon,
+    InstagramIcon,
+    TwitterIcon
+  },
 }
 </script>
+
+<style lang="scss">
+#footer-app {
+  padding: 30px 70px !important;
+}
+</style>

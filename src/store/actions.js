@@ -14,9 +14,18 @@ const actions = {
   },
   detailProduct ({commit}, productId) {
     return new Promise((resolve, reject) => {
-      axios.post(`api/v2/gifts/${productId}`)
+      axios.get(`api/v2/gifts/${productId}`)
         .then(response => {
-          commit('SET_PRODUCT_LIST', response.data)
+          commit('SET_PRODUCT_DETAIL', response.data.data)
+          resolve(response)
+        })
+        .catch(error => { reject(error.response) })
+    })
+  },
+  toggleProduct (context, productId) {
+    return new Promise((resolve, reject) => {
+      axios.post(`api/v2/gifts/${productId}/wishlist`)
+        .then(response => {
           resolve(response)
         })
         .catch(error => { reject(error.response) })

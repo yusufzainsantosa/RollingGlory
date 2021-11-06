@@ -65,10 +65,32 @@
               :key="index"
             >
               <div
-                class="card-header product-title bg-white"
-                v-bind:class="{ 'text-success': (value.attributes.stock >= 5), 'text-error': (value.attributes.stock < 5 || value.attributes.stock == 0) }"
+                class="product-overlay"
+                v-show="value.attributes.stock == 0"
               >
-              
+              </div>
+              <div class="product-hover">
+                <div class="d-flex flex-column align-items-center product-hover-container">
+                  <div class="product-hover-title">
+                    {{ value.attributes.name }}
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-outline-light mt-3"
+                    @click="productClick(value.id)"
+                  >
+                    <eye-icon size="1.5x" />
+                    View detail
+                  </button>
+                </div>
+              </div>
+              <div
+                class="card-header product-title"
+                v-bind:class="{
+                  'text-success': (value.attributes.stock >= 5),
+                  'text-error': (value.attributes.stock < 5 || value.attributes.stock == 0)
+                }"
+              >              
                 <div
                   class="sale-tag"                  
                   v-bind:class="{
@@ -91,38 +113,57 @@
                     Item
                   </span>
                 </div>
-                {{ stockValue(value.attributes.stock) }}
+                <div class="product-stock">
+                  {{ stockValue(value.attributes.stock) }}
+                </div>
               </div>
               <div class="product-imgcontainer d-flex align-items-center justify-content-center">
                 <img
                   :src="value.attributes.images[0]"
                   class="product-img"
-                  alt="product"
+                  :alt="`product-${value.attributes.slug}`"
                 >
               </div>
-              <div class="card-body">
+              <div class="card-body p-0">
                 <h6 class="card-title">
                   {{ value.attributes.name }}
                 </h6>
-                <p class="mb-0 mt-2">
+                <p class="mb-0 mt-2 product-points">
+                  <img
+                    :src="require('@/assets/images/point-logo-list.svg')"
+                    class="img-points-logo"
+                    alt="logo"
+                  >  
                   {{ value.attributes.points }}
                   <span>
                     poins
                   </span>
                 </p>
-                <div>
-                  <star-rating
-                    :inline="true"
-                    :rating="roundingNum(value.attributes.rating)"
-                    :read-only="true"
-                    :star-size="20"
-                    :increment="0.5"
-                    :show-rating="false"
-                  />                  
+              </div>
+              <div class="card-body p-0 pb-4 d-flex">
+                <star-rating
+                  :inline="true"
+                  :rating="roundingNum(value.attributes.rating)"
+                  :read-only="true"
+                  :star-size="15"
+                  :increment="0.5"
+                  :show-rating="false"
+                />     
+                <div class="product-reviews">           
                   {{ value.attributes.numOfReviews }}
-                  <span>
-                    reviews
-                  </span>
+                  reviews
+                </div>  
+                <div
+                  v-show="!value.attributes.isWishlist"
+                  class="ms-auto wishlist-index"
+                >
+                  <div class="product-wishlist d-flex justify-content-center py-1">
+                    <heart-icon
+                      size="1.5x"
+                      class="wishlist-icon"
+                      :fill="wishlistColor"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -135,6 +176,7 @@
 
 <script>
 import StarRating from 'vue-star-rating'
+import { EyeIcon, HeartIcon } from 'vue-feather-icons'
 
 export default {
   data () {
@@ -149,10 +191,13 @@ export default {
           value: 'all'
         }
       ],
-      selectFilter: []
+      selectFilter: [],
+      wishlistColor:'white'
     }
   },
   components: {
+    EyeIcon,
+    HeartIcon,
     StarRating
   },
   computed: {
@@ -163,13 +208,17 @@ export default {
       return this.$store.state.page_meta
     }
   },
-  watch: {
-  },
   methods: {
+    productClick(id) {
+      this.$router.push({
+        name: 'product-detail',
+        params: { productId: id }
+      })
+    },
     productTags(data) {
-      if (data.isNew == 1 && !(this.roundingNum(data.rating) >= 4 && data.numOfReviews > 25)) return 'New'
-      else if (data.isNew == 0 && this.roundingNum(data.rating) >= 4 && data.numOfReviews > 25) return 'Best Seller'
-      else if (data.isNew == 1 && this.roundingNum(data.rating) >= 4 && data.numOfReviews > 25) return 'Hot Item'
+      if (data.isNew && !(this.roundingNum(data.rating) >= 4 && data.numOfReviews > 25)) return 'New'
+      else if (!data.isNew && this.roundingNum(data.rating) >= 4 && data.numOfReviews > 25) return 'Best Seller'
+      else if (data.isNew && this.roundingNum(data.rating) >= 4 && data.numOfReviews > 25) return 'Hot Item'
     },
     roundingNum(num) {
       if (num >= (Math.floor(num) + 0.3) && num <= (Math.floor(num) + 0.7)) return (Math.floor(num) + 0.5)
@@ -188,6 +237,10 @@ export default {
 </script>
 
 <style lang="scss">
+#main-container > div {
+  min-width: 1070px !important;
+}
+
 .filter-container {
   min-width: 300px;
 }
@@ -195,18 +248,88 @@ export default {
 .list-container {
   min-width: 700px;
   width: 100%;
-
+  
   .product-card {
+    border-radius: 10px;
     min-width: 270px;
     max-width: 290px;
     overflow: hidden;
     width: 100%;
+  }
+  .product-card:hover {
+    .product-hover {
+      display: block; 
+    }
+    .product-overlay {
+      background-color: transparent;
+    }
+    .product-stock {
+      color: white;
+    }
+    .product-wishlist {
+      background-color: transparent !important;
+      border:1px solid white !important;
+    }
+    .wishlist-icon {
+      color: white !important;
+    }
+  }  
+  .product-hover {
+    background-color: #73b71bec;
+    bottom: 0;
+    color: white;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 20;    
+
+    .product-hover-container {
+      height: 100%;
+
+      button {
+        border-radius: 20px;
+        width: 200px;
+      }
+    }
+    .product-hover-title {
+      margin-top: 180px;
+      margin-bottom: 50px;
+    }
   }
   .product-img {
     height: 87%;
   }
   .product-imgcontainer {
     height: 270px;
+  }
+  .product-overlay {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+  .product-points {
+    color: #79B625;
+    font-size: 14px;
+
+    .img-points-logo {
+      height: 10px;
+    }
+  }
+  .product-reviews {
+    font-size: 10px;
+    color: gray;
+    margin-top: 12px;
   }
   .product-sort {
     border-radius: 50px;
@@ -215,8 +338,10 @@ export default {
     width: 150px;
   }
   .product-title {
+    z-index: 30;
+    background-color: transparent;
     border-bottom: none;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold;
     padding-bottom: 0;
     padding-top: 20px;
@@ -227,13 +352,15 @@ export default {
      
     span {
       bottom: 0px;
+      left: 30px;
     }   
   }
   .product-hot-item {
-    background: #ff5a97;      
+    background: #E7246B;      
      
     span {
       bottom: 0px;
+      left: 35px;
     }     
   }
   .product-new {
@@ -241,7 +368,15 @@ export default {
      
     span {
       bottom: 10px;
+      left: 35px;
     }   
+  }
+  .product-wishlist {
+    align-content: center;
+    background-color: #E7246B;
+    border-radius: 50px;
+    width: 55px;
+    z-index: 30;
   }
   .sale-tag{
     border-radius: 10px;
@@ -254,16 +389,23 @@ export default {
 
     span {
       color: white;
-      left: 35px;
       position: absolute;
+      text-align: center;
     }
   }
 
   .text-error {
-    color: #ff5a97;
+    color: #E7246B;
   }
   .text-success {
-    color: rgb(106, 207, 106);
+    color: #79B625 !important;
+  }
+
+  .wishlist-icon {
+    color: transparent;
+  }
+  .wishlist-index {
+    z-index: 30;
   }
 }
   

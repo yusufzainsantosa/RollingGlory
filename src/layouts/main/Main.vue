@@ -20,7 +20,7 @@ export default {
 
 <style lang="scss">
 #main-container > div {
-  min-width: 600px;
+  min-width: 815px;
 }
 .container {
   min-height: calc(100vh - 100px);

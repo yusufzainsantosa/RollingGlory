@@ -17,8 +17,8 @@ const routes = [
         }
       },
       {
-        path: '/product-detail',
-        alias: '/productdetail',
+        path: '/product-detail/:productId',
+        alias: '/productdetail/:productId',
         name: 'product-detail',
         component: () => import('@/views/ProductDetail.vue'),
         meta: {
