@@ -81,8 +81,13 @@
           </div>
 
           <div class="d-flex stock">
-            <div>
-              <h2 class="fs-3 fw-bold product-price">
+            <div>  
+              <h2 class="fs-3 fw-bold product-price">                            
+                <img
+                  :src="require('@/assets/images/point-logo.svg')"
+                  class="img-points-logo"
+                  alt="logo"
+                >  
                 {{ productDetail.attributes.points }} poins
               </h2>
             </div>
