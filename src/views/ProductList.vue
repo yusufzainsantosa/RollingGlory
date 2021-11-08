@@ -46,6 +46,7 @@
             <select
               class="form-select product-sort label-style"
               aria-label="Default select example"
+              v-model="selectSort"
             >
               <option value="terbaru">
                 Terbaru
@@ -188,10 +189,11 @@ export default {
         },
         {
           label: 'Stock Tersedia',
-          value: 'all'
+          value: 'ready'
         }
       ],
       selectFilter: [],
+      selectSort: 'terbaru',
       wishlistColor:'white'
     }
   },
@@ -202,10 +204,18 @@ export default {
   },
   computed: {
     allProduct() {
-      return this.$store.state.product_list
+      return this.$store.state.product_display
     },
     metaProduct() {
       return this.$store.state.page_meta
+    }
+  },
+  watch: {
+    selectFilter() {
+      this.$store.commit('SET_FILTER_PRODUCT', this.selectFilter)
+    },
+    selectSort() {
+      this.$store.commit('SET_SORT_PRODUCT', this.selectSort)
     }
   },
   methods: {

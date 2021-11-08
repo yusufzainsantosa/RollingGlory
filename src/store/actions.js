@@ -7,6 +7,7 @@ const actions = {
         .then(response => {
           commit('SET_PAGE_META', response.data.meta)
           commit('SET_PRODUCT_LIST', response.data.data)
+          commit('SET_SORT_PRODUCT', 'terbaru')
           resolve(response)
         })
         .catch(error => { reject(error.response) })
