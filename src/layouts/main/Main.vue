@@ -23,7 +23,7 @@ export default {
   min-width: 815px;
 }
 .container {
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 175.45px);
   max-width: 100vw;
 }
 </style>
