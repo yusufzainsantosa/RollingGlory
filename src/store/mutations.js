@@ -20,7 +20,7 @@ const mutations = {
       else if (value[0] == 'ready') state.product_display = state.product_list.filter(data => data.attributes.stock > 0)
     }
     else {
-      state.product_display = state.product_list.filter(data => data.attributes.rating >= 3.8 || data.attributes.stock > 0)
+      state.product_display = state.product_list.filter(data => data.attributes.rating >= 3.8 && data.attributes.stock > 0)
     }
   }
 }
