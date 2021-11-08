@@ -235,7 +235,7 @@ export default {
       else if (data.isNew && this.roundingNum(data.rating) >= 4 && data.numOfReviews > 25) return 'Hot Item'
     },
     roundingNum(num) {
-      if (num >= (Math.floor(num) + 0.3) && num <= (Math.floor(num) + 0.7)) return (Math.floor(num) + 0.5)
+      if (num >= (Math.floor(num) + 0.25) && num < (Math.floor(num) + 0.75)) return (Math.floor(num) + 0.5)
       return Math.round(num)
     },
     stockValue(stock) {

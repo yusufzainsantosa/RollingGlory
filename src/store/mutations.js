@@ -16,7 +16,7 @@ const mutations = {
   SET_FILTER_PRODUCT (state, value) {
     if (value.length == 0) state.product_display = [...state.product_list]
     else if (value.length == 1) {
-      if (value[0] == '4+') state.product_display = state.product_list.filter(data => data.attributes.rating >= 3.8)
+      if (value[0] == '4+') state.product_display = state.product_list.filter(data => data.attributes.rating >= 3.75)
       else if (value[0] == 'ready') state.product_display = state.product_list.filter(data => data.attributes.stock > 0)
     }
     else {
